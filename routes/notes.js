@@ -13,7 +13,7 @@ const db = require('../config/db'); //added to .gitignore
 const mongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
 
-router.post('/', function (req, res, next) {
+router.post('/', (req, res) => {
     mongoClient.connect(db.URL, {useNewUrlParser: true}, (error, database) => {
         if (error) {
             throw error;
@@ -24,7 +24,7 @@ router.post('/', function (req, res, next) {
     });
 });
 
-router.get('/:id', function (req, res, next) {
+router.get('/:id', (req, res) => {
     const id = req.params.id;
     const details = {'_id': new ObjectID(id)};
     mongoClient.connect(db.URL, {useNewUrlParser: true}, (error, database) => {
@@ -42,6 +42,17 @@ router.get('/:id', function (req, res, next) {
         )
     });
 
+});
+
+router.get('/', (req, res) => {
+    mongoClient.connect(db.URL, {useNewUrlParser: true}, (error, database) => {
+        if (error) {
+            throw error;
+        }
+        database.db(db.NAME).collection('notes').find().toArray((err, results) => {
+            res.send(results);
+        })
+    });
 });
 
 module.exports = router;
