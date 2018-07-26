@@ -21,6 +21,7 @@ router.post('/', (req, res) => {
         database.db(db.NAME).collection('notes').insert(req.body).then(value => {
             res.send(`Created new entry with ID ${value.insertedIds[0]} and value ${value.ops[0].title}`);
         });
+        database.close();
     });
 });
 
@@ -39,7 +40,8 @@ router.get('/:id', (req, res) => {
                     res.send(item);
                 }
             }
-        )
+        );
+        database.close();
     });
 
 });
@@ -51,7 +53,8 @@ router.get('/', (req, res) => {
         }
         database.db(db.NAME).collection('notes').find().toArray((err, results) => {
             res.send(results);
-        })
+        });
+        database.close();
     });
 });
 
